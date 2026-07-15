@@ -1,4 +1,15 @@
 import requests
+import urllib.request
+import json
+
+# Get coordinate
+def get_lat_long(zip_code):
+    with urllib.request.urlopen(f"http://api.zippopotam.us/us/{zip_code}") as response:
+        data = json.loads(response.read().decode())
+        place = data['places'][0]
+        lat = place['latitude']
+        lon = place['longitude']
+        return lat, lon
 
 # Showing function
 def show(point_data, mode, length):
@@ -42,8 +53,15 @@ def main():
             elif choice == 2:
                 show(point_data, "forecastHourly", hours)
             elif choice == 3:
-                latitude = float(input("latitude: "))
-                longitude = float(input("longitude: "))
+                print("1. Coordinate")
+                print("2. Zip code")
+                option = int(input("Your choice: "))
+                if option == 1:
+                    latitude = float(input("Latitude: "))
+                    longitude = float(input("Longitude: "))
+                elif option == 2:
+                    zipcode = input("Zipcode: ")
+                    latitude, longitude = get_lat_long(zipcode)
                 point_data = requests.get(f"https://api.weather.gov/points/{latitude},{longitude}").json()
                 break
             elif choice == 4:

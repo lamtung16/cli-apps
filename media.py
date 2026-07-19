@@ -46,7 +46,8 @@ def main():
                 for channel in filter(mode, base_url, username, password, "name", key):
                     stream_id = channel.get("stream_id")
                     channel_name = channel.get("name")
-                    url = f"{base_url.rstrip('/')}/movie/{username}/{password}/{stream_id}.mp4"
+                    container_extension = channel.get("container_extension")
+                    url = f"{base_url.rstrip('/')}/movie/{username}/{password}/{stream_id}.{container_extension}"
                     print(f"{channel_name}: {url}")
                 
                 exit = input("Exit (y/n): ")

@@ -16,14 +16,14 @@ def show(point_data, mode, length):
     response = requests.get(point_data.get("properties", {}).get(mode, []))
     data = response.json()
     periods = data.get("properties", {}).get("periods", [])
-    print(f"{'Time':<16} | {'Tem':<4} | {'Pre':<3} | {'Wind':<9}")
-    print("-" * 39)
+    print(f"{'Time':<11} | {'Tem':<4} | {'Pre':<3} | {'Wind':<9}")
+    print("-" * 31)
     for period in periods[:length]:
-        time = period.get("startTime")[:13].replace("T"," ") + "-" + period.get("endTime")[11:13]
+        time = period.get("startTime")[5:13].replace("T"," ").replace("-","/") + "-" + period.get("endTime")[11:13]
         temp = str(period.get("temperature"))
         pre = period.get("probabilityOfPrecipitation", {}).get("value")
-        wind = period.get("windSpeed").replace(" to ","-")
-        print(f"{time:<16} | {temp:<3}F | {pre:<2}% | {wind:<9}")
+        wind = period.get("windSpeed").replace(" to ","-")[:-4]
+        print(f"{time:<11} | {temp:<3}F | {pre:<2}% | {wind:<9}")
 
 
 # Main function
@@ -65,7 +65,7 @@ def main():
                 point_data = requests.get(f"https://api.weather.gov/points/{latitude},{longitude}").json()
                 break
             elif choice == 4:
-                print("Bye!!!")
+                print("Bye (^-^)")
                 break
         
         if choice == 4:

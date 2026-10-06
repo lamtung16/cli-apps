@@ -74,7 +74,7 @@ except Exception as e:
 # ---------------- BEAUTIFIED TABLE PRINTING ----------------
 if results:
     # Define columns to exclude (case-insensitive check)
-    exclude_columns = {"url_format", "created_at"}
+    exclude_columns = {"url_format", "created_at", "status", "exp_date", "username", "password"}
     
     # Filter out excluded keys from available columns
     all_keys = [k for k in results[0].keys() if k.lower() not in exclude_columns]

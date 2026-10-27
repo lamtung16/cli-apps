@@ -40,9 +40,9 @@ def show(point_data, mode, length):
     data = response.json()
     periods = data.get("properties", {}).get("periods", [])
     
-    # Enhanced table format including Feels Like and Humidity
-    print(f"{'Time':<11} | {'Tmp':<3} | {'Feel':<4} | {'Hum':<4} | {'Pre':<3} | {'Wind':<9}")
-    print("-" * 47)
+    # Enhanced table format including Feels Like, Humidity, Dewpoint, and Precipitation
+    print(f"{'Time':<11} | {'Tmp':<3} | {'Feel':<4} | {'Hum':<4} | {'Pre':<3} | {'Dew':<4} | {'Wind':<9}")
+    print("-" * 55)
     
     for period in periods[:length]:
         time = period.get("startTime")[5:13].replace("T"," ").replace("-","/") + "-" + period.get("endTime")[11:13]
@@ -52,6 +52,15 @@ def show(point_data, mode, length):
         hum_data = period.get("relativeHumidity", {})
         hum = hum_data.get("value") if hum_data else None
         hum_str = str(hum) if hum is not None else "-"
+        
+        # Get dewpoint (NWS API provides dewpoint in Celsius, convert to Fahrenheit to match Tmp)
+        dew_data = period.get("dewpoint", {})
+        dew_c = dew_data.get("value") if dew_data else None
+        if dew_c is not None:
+            dew = round((dew_c * 9/5) + 32)
+            dew_str = str(dew)
+        else:
+            dew_str = "-"
         
         # Parse wind speed
         wind_raw = period.get("windSpeed", "0 mph")
@@ -66,7 +75,7 @@ def show(point_data, mode, length):
         pre = pre_data.get("value")
         pre_str = str(pre) if pre is not None else "0"
         
-        print(f"{time:<11} | {temp:<3} | {feels:<4} | {hum_str:<3}% | {pre_str:<2}% | {wind:<9}")
+        print(f"{time:<11} | {temp:<3} | {feels:<4} | {hum_str:<3}% | {pre_str:<2}% | {dew_str:<4} | {wind:<9}")
 
 # Main function
 def main():

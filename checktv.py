@@ -63,11 +63,12 @@ try:
         lines = [line.decode("utf-8") for line in response.readlines()]
         reader = csv.DictReader(lines)
         for row in reader:
-            try:
-                processed = process_row(row)
-                results.append(processed)
-            except Exception as e:
-                print(f"Error processing row: {e}")
+            if row.get("username", "") != "":
+                try:
+                    processed = process_row(row)
+                    results.append(processed)
+                except Exception as e:
+                    print(f"Error processing row: {e}")
 except Exception as e:
     print(f"Error fetching CSV: {e}")
 
